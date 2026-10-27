@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Talk to Flowi{% endblock %}
+{% block content %}
+
+<div class="chat-container">
+    <div class="glass chat-header">
+        <h1>Talk to Flowi</h1>
+        <p>Your private AI Voice Companion</p>
+    </div>
+
+    <div class="glass chat-body">
+        <p id="micStatus">Click mic to record voice note:</p>
+        
+        <button id="micBtn" onclick="toggleMic()" title="Record voice note">🎙️</button>
+        
+        <audio id="audioPlayback" controls style="display:none;"></audio>
+        
+        <div class="botpress-wrapper">
+            <script src="https://cdn.botpress.cloud/webchat/v5.0/inject.js"></script>
+            <script src="https://files.bpcontent.cloud/2026/10/25/23/20261025231800-3UBE34VT.js" defer></script>
+        </div>
+    </div>
+</div>
+
+<script>
+let rec, chunks = [], recording = false;
+
+async function toggleMic() {
+    const btn = document.getElementById('micBtn');
+    const status = document.getElementById('micStatus');
+    const player = document.getElementById('audioPlayback');
+
+    if (!recording) {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        rec = new MediaRecorder(stream); 
+        chunks = [];
+
+        rec.ondataavailable = e => chunks.push(e.data);
+
+        rec.onstop = () => { 
+            player.src = URL.createObjectURL(new Blob(chunks, { type: 'audio/webm' })); 
+            player.style.display = 'block'; 
+            status.innerText = "Recorded!"; 
+        };
+
+        rec.start(); 
+        recording = true; 
+        btn.style.background = '#b91c1c'; 
+        status.innerText = "Recording...";
+    } else { 
+        rec.stop(); 
+        recording = false; 
+        btn.style.background = '#ef4444'; 
+    }
+}
+</script>
+
+{% endblock %}

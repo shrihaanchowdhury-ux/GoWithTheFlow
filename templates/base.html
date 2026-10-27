@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Go With The Flow{% endblock %}</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 8C27 8 10 24 10 45C10 62 20 73 34 79L29 92L46 81C48 81 49 82 52 82C74 82 90 66 90 45C90 24 73 8 50 8Z' fill='none' stroke='%23078BEE' stroke-width='8'/></svg>">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <header class="glass">
+    <a href="{{ url_for('index') }}" style="line-height:0;">
+      <svg width="38" height="38" viewBox="0 0 100 100"><path d='M50 8C27 8 10 24 10 45C10 62 20 73 34 79L29 92L46 81C48 81 49 82 52 82C74 82 90 66 90 45C90 24 73 8 50 8Z' fill='none' stroke='#078BEE' stroke-width='8'/></svg>
+    </a>
+    <nav class="nav-links">
+      <a href="{{ url_for('index') }}" class="nav-btn">Home</a>
+      <a href="{{ url_for('chat') }}" class="nav-btn">Talk to Flowi</a>
+      <a href="{{ url_for('community') }}" class="nav-btn">Speak to the World</a>
+      <a href="{{ url_for('seminar') }}" class="nav-btn">Find your Flow Current</a>
+      <a href="{{ url_for('blog') }}" class="nav-btn">Founder's Blog</a>
+      <a href="{{ url_for('profile') }}" class="nav-btn">Profile</a>
+    </nav>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>&copy; Shrihaan Chowdhury. All rights reserved.</footer>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const isSignedIn = localStorage.getItem('flowi_signed_in');
+      const currentPath = window.location.pathname;
+      const isPublicPage = currentPath === '/' || currentPath === '/profile';
+      if (!isSignedIn && !isPublicPage) {
+        alert('Please create your profile and sign in first to access Go With The Flow!');
+        window.location.href = "{{ url_for('profile') }}";
+      }
+    });
+  </script>
+</body>
+</html>
